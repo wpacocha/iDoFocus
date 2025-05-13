@@ -2,6 +2,7 @@ import SwiftUI
 import CoreData
 import AVFoundation
 import UIKit
+import CoreMotion
 
 struct TaskListView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -27,6 +28,9 @@ struct TaskListView: View {
     @State private var customBreakDuration: String = ""
     @State private var isBreakTime: Bool = false
     @State private var quoteText: String = "Loading..."
+    @State private var motionManager: CMMotionManager = CMMotionManager()
+    @State private var isDeviceMoving = false
+
 
     var body: some View {
         NavigationStack {
@@ -65,6 +69,9 @@ struct TaskListView: View {
                 }
             }
             .navigationTitle("Tasks")
+            .onAppear{
+                requestNotificationPermissions()
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -245,6 +252,7 @@ struct TaskListView: View {
         showTimerOverlay = true
         fetchQuote()
         startTimer()
+        startGyroscope()
     }
     
     private func startBreak(){
@@ -253,6 +261,7 @@ struct TaskListView: View {
         showTimerOverlay = true
         fetchQuote()
         startTimer()
+        stopGyroscope()
     }
 
     private func startTimer() {
@@ -284,6 +293,7 @@ struct TaskListView: View {
         timer?.invalidate()
         timer = nil
         timerRunning = false
+        stopGyroscope()
     }
 
     private func resetTimer() {
@@ -336,11 +346,59 @@ struct TaskListView: View {
         task.resume()
     }
 
-
-
     struct QuoteResponse: Decodable {
         let content: String
         let author: String
     }
+    
+    private func startGyroscope() {
+        if motionManager.isGyroAvailable {
+            motionManager.gyroUpdateInterval = 0.1
+            motionManager.startGyroUpdates(to: .main) { (data, error) in
+                guard let data = data else { return }
 
+                if abs(data.rotationRate.x) > 0.5 || abs(data.rotationRate.y) > 0.5 || abs(data.rotationRate.z) > 0.5 {
+                    if !self.isDeviceMoving {
+                        self.isDeviceMoving = true
+                        self.showFocusReminder()
+                    }
+                } else {
+                    self.isDeviceMoving = false
+                }
+            }
+        }
+    }
+
+
+
+    private func showFocusReminder() {
+        let content = UNMutableNotificationContent()
+        content.title = "Attention!"
+        content.body = "Focus on your task!"
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: "focusReminder", content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func stopGyroscope() {
+        motionManager.stopGyroUpdates()
+    }
+
+    private func requestNotificationPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                print("Permission granted")
+            } else {
+                print("Permission denied")
+            }
+        }
+    }
+    
 }
