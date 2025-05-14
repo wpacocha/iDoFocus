@@ -11,7 +11,6 @@ struct TaskListView: View {
         animation: .default)
     private var tasks: FetchedResults<Task>
 
-    
     var player: AVAudioPlayer?
     
     @State private var newTaskTitle: String = ""
@@ -33,101 +32,109 @@ struct TaskListView: View {
     
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
 
-
-
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    Text("   Tasks")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(isDarkMode ? .white : .black)
-                    Spacer()
-                }
-                    HStack{
-                    TextField(
-                        "",
-                        text: $newTaskTitle,
-                        prompt: Text("Enter new task")
-                            .foregroundColor(isDarkMode ? Color.white.opacity(0.6) : Color.white)
-                    )
-                        .padding(10)
-                        .cornerRadius(10)
-                        .foregroundColor(isDarkMode ? .white : .black)
-                        .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(isDarkMode ? Color.white.opacity(0.6) : Color.white.opacity(0.4), lineWidth: 1)
-                        )
-
-                    Button(action: addTask) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.blue)
-                    }
-                    .buttonStyle(.borderless)
-                }
-                .padding(.horizontal)
-
-                List {
-                    ForEach(tasks) { task in
-                        HStack {
-                            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .onTapGesture {
-                                    toggleTask(task)
-                                }
-                                .foregroundColor(isDarkMode ? .white : .black)
-                            
-                            Text(task.title ?? "")
-                                .foregroundColor(isDarkMode ? .white : .black)
-                            
-                            Spacer()
-                            
-                            Button("Work") {
-                                startWork(on: task)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .padding(8)
-                            .cornerRadius(8)
-                            .foregroundColor(.white)
-                            .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
-                        }
-                        .listRowBackground(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
-                    }
-                    .onDelete(perform: deleteTasks)
-                }
-                .scrollContentBackground(.hidden)
-                //.background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
-                .background(Color.clear)
+            VStack(spacing: 16) {
+                headerView
+                addTaskView
+                tasksListView
             }
+            .padding()
             .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
             .foregroundColor(isDarkMode ? .white : .black)
-            .onAppear{
-                requestNotificationPermissions()
-            }
+            .onAppear(perform: requestNotificationPermissions)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showSettingsOverlay = true
-                    }) {
+                    Button(action: { showSettingsOverlay = true }) {
                         Image(systemName: "gearshape.fill")
+                            .foregroundColor(.blue)
                     }
                 }
             }
             .overlay(timerOverlay)
             .overlay(settingsOverlay)
             .alert("Did you finish your task?", isPresented: $showCompletionAlert) {
-                Button("Yes") {
-                    markTaskCompleted()
-                }
+                Button("Yes") { markTaskCompleted() }
                 Button("No") {
                     showTimerOverlay = false
                     startBreak()
                 }
             }
         }
+    }
+
+    private var headerView: some View {
+        HStack {
+            Text("Tasks")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(isDarkMode ? .white : .black)
+            Spacer()
+        }
+    }
+
+    private var addTaskView: some View {
+        HStack {
+            TextField(
+                "",
+                text: $newTaskTitle,
+                prompt: Text("Enter new task")
+                    .foregroundColor(isDarkMode ? Color.white.opacity(0.6) : Color.black.opacity(0.6))
+            )
+            .padding(10)
+            .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isDarkMode ? Color.white.opacity(0.6) : Color.black.opacity(0.4), lineWidth: 1)
+            )
+            .foregroundColor(isDarkMode ? .white : .black)
+
+            Button(action: addTask) {
+                Image(systemName: "plus")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.blue)
+            }
+            .buttonStyle(.borderless)
+        }
+    }
+
+    private var tasksListView: some View {
+        List {
+            ForEach(tasks) { task in
+                HStack {
+                    Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                        .onTapGesture { toggleTask(task) }
+                        .foregroundColor(isDarkMode ? .white : .black)
+
+                    Text(task.title ?? "")
+                        .foregroundColor(isDarkMode ? .white : .black)
+
+                    Spacer()
+
+                    Button("Work") {
+                        startWork(on: task)
+                    }
+                    .padding(8)
+                    .background(isDarkMode ? Color.blue.opacity(0.8) : Color.blue)
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(isDarkMode ? Color(red: 60/255, green: 70/255, blue: 85/255) : Color(.systemGray6))
+                )
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .transition(.move(edge: .top))
+            }
+            .onDelete(perform: deleteTasks)
+        }
+        .scrollContentBackground(.hidden)
+        .background(Color.clear)
+        .listStyle(.plain)
     }
 
     private var timerOverlay: some View {
@@ -142,20 +149,20 @@ struct TaskListView: View {
                                 .font(.title)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.black)
-                            
+
                             Text(formatTime())
                                 .font(.system(size: 60, weight: .bold, design: .monospaced))
                                 .foregroundColor(.black)
                                 .padding(.top, 10)
-                            
-                            Text("“\(quoteText)”")
+
+                            Text("\"\(quoteText)\"")
                                 .font(.body)
                                 .fontWeight(.light)
                                 .italic()
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.black)
                                 .padding(.horizontal)
-                                .padding(.bottom,10)
+                                .padding(.bottom, 10)
 
                             HStack(spacing: 20) {
                                 Button("Stop") {
@@ -184,8 +191,6 @@ struct TaskListView: View {
         }
     }
 
-
-
     private var settingsOverlay: some View {
         Group {
             if showSettingsOverlay {
@@ -197,8 +202,8 @@ struct TaskListView: View {
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .padding()
-                            
-                            Toggle(isOn: $isDarkMode){
+
+                            Toggle(isOn: $isDarkMode) {
                                 Text("Dark mode")
                                     .foregroundColor(.white)
                             }
