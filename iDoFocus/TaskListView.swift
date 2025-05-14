@@ -30,19 +30,42 @@ struct TaskListView: View {
     @State private var quoteText: String = "Loading..."
     @State private var motionManager: CMMotionManager = CMMotionManager()
     @State private var isDeviceMoving = false
+    
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+
 
 
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
-                    TextField("Enter new task", text: $newTaskTitle)
-                        .textFieldStyle(.roundedBorder)
+                    Text("   Tasks")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(isDarkMode ? .white : .black)
+                    Spacer()
+                }
+                    HStack{
+                    TextField(
+                        "",
+                        text: $newTaskTitle,
+                        prompt: Text("Enter new task")
+                            .foregroundColor(isDarkMode ? Color.white.opacity(0.6) : Color.white)
+                    )
+                        .padding(10)
+                        .cornerRadius(10)
+                        .foregroundColor(isDarkMode ? .white : .black)
+                        .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(isDarkMode ? Color.white.opacity(0.6) : Color.white.opacity(0.4), lineWidth: 1)
+                        )
 
                     Button(action: addTask) {
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 24, height: 24)
+                            .foregroundColor(.blue)
                     }
                     .buttonStyle(.borderless)
                 }
@@ -55,20 +78,32 @@ struct TaskListView: View {
                                 .onTapGesture {
                                     toggleTask(task)
                                 }
+                                .foregroundColor(isDarkMode ? .white : .black)
+                            
                             Text(task.title ?? "")
-
+                                .foregroundColor(isDarkMode ? .white : .black)
+                            
                             Spacer()
-
+                            
                             Button("Work") {
                                 startWork(on: task)
                             }
                             .buttonStyle(.borderedProminent)
+                            .padding(8)
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
+                            .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
                         }
+                        .listRowBackground(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
                     }
                     .onDelete(perform: deleteTasks)
                 }
+                .scrollContentBackground(.hidden)
+                //.background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
+                .background(Color.clear)
             }
-            .navigationTitle("Tasks")
+            .background(isDarkMode ? Color(red:50/255, green:60/255,blue:75/255) : Color.white)
+            .foregroundColor(isDarkMode ? .white : .black)
             .onAppear{
                 requestNotificationPermissions()
             }
@@ -162,6 +197,12 @@ struct TaskListView: View {
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .padding()
+                            
+                            Toggle(isOn: $isDarkMode){
+                                Text("Dark mode")
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
 
                             Button("Pomodoro 25/5") {
                                 selectedWorkDuration = 25
