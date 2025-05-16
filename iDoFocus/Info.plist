@@ -24,6 +24,12 @@
     <string></string>
     <key>UIApplicationSceneManifest</key>
     <dict/>
+<key>NSExtension</key>
+<dict>
+    <key>Supports Live Activities</key>
+    <true/>
+</dict>
+
 <key>NSAppTransportSecurity</key>
 <dict>
     <key>NSAllowsArbitraryLoads</key>

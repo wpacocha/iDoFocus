@@ -3,6 +3,9 @@ import CoreData
 import AVFoundation
 import UIKit
 import CoreMotion
+import ActivityKit
+import struct _Concurrency.Task
+
 
 struct TaskListView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -10,7 +13,7 @@ struct TaskListView: View {
         sortDescriptors: [SortDescriptor(\Task.title, order: .forward)],
         animation: .default)
     private var tasks: FetchedResults<Task>
-
+    
     var player: AVAudioPlayer?
     
     @State private var newTaskTitle: String = ""
@@ -31,7 +34,7 @@ struct TaskListView: View {
     @State private var isDeviceMoving = false
     
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
@@ -62,7 +65,7 @@ struct TaskListView: View {
             }
         }
     }
-
+    
     private var headerView: some View {
         HStack {
             Text("Tasks")
@@ -72,7 +75,7 @@ struct TaskListView: View {
             Spacer()
         }
     }
-
+    
     private var addTaskView: some View {
         HStack {
             TextField(
@@ -89,7 +92,7 @@ struct TaskListView: View {
                     .stroke(isDarkMode ? Color.white.opacity(0.6) : Color.black.opacity(0.4), lineWidth: 1)
             )
             .foregroundColor(isDarkMode ? .white : .black)
-
+            
             Button(action: addTask) {
                 Image(systemName: "plus")
                     .resizable()
@@ -99,7 +102,7 @@ struct TaskListView: View {
             .buttonStyle(.borderless)
         }
     }
-
+    
     private var tasksListView: some View {
         List {
             ForEach(tasks) { task in
@@ -107,12 +110,12 @@ struct TaskListView: View {
                     Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                         .onTapGesture { toggleTask(task) }
                         .foregroundColor(isDarkMode ? .white : .black)
-
+                    
                     Text(task.title ?? "")
                         .foregroundColor(isDarkMode ? .white : .black)
-
+                    
                     Spacer()
-
+                    
                     Button("Work") {
                         startWork(on: task)
                     }
@@ -129,14 +132,22 @@ struct TaskListView: View {
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
                 .transition(.move(edge: .top))
+                .swipeActions(edge: .trailing, allowsFullSwipe: true){
+                    Button(role: .destructive){
+                        if let index = tasks.firstIndex(of: task) {
+                            deleteTasks(at: IndexSet(integer: index))
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
             }
-            .onDelete(perform: deleteTasks)
         }
         .scrollContentBackground(.hidden)
         .background(Color.clear)
         .listStyle(.plain)
     }
-
+    
     private var timerOverlay: some View {
         Group {
             if showTimerOverlay {
@@ -149,12 +160,12 @@ struct TaskListView: View {
                                 .font(.title)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.black)
-
+                            
                             Text(formatTime())
                                 .font(.system(size: 60, weight: .bold, design: .monospaced))
                                 .foregroundColor(.black)
                                 .padding(.top, 10)
-
+                            
                             Text("\"\(quoteText)\"")
                                 .font(.body)
                                 .fontWeight(.light)
@@ -163,7 +174,7 @@ struct TaskListView: View {
                                 .foregroundColor(.black)
                                 .padding(.horizontal)
                                 .padding(.bottom, 10)
-
+                            
                             HStack(spacing: 20) {
                                 Button("Stop") {
                                     stopTimer()
@@ -173,7 +184,7 @@ struct TaskListView: View {
                                 .background(Color.red.opacity(0.8))
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
-
+                                
                                 Button("Reset") {
                                     resetTimer()
                                 }
@@ -182,7 +193,7 @@ struct TaskListView: View {
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
                             }
-
+                            
                             Spacer()
                         }
                         .padding(.top, 80)
@@ -190,7 +201,7 @@ struct TaskListView: View {
             }
         }
     }
-
+    
     private var settingsOverlay: some View {
         Group {
             if showSettingsOverlay {
@@ -202,13 +213,13 @@ struct TaskListView: View {
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .padding()
-
+                            
                             Toggle(isOn: $isDarkMode) {
                                 Text("Dark mode")
                                     .foregroundColor(.white)
                             }
                             .padding()
-
+                            
                             Button("Pomodoro 25/5") {
                                 selectedWorkDuration = 25
                                 selectedBreakDuration = 5
@@ -218,7 +229,7 @@ struct TaskListView: View {
                             .background(Color.green.opacity(0.8))
                             .foregroundColor(.white)
                             .cornerRadius(10)
-
+                            
                             Button("Long 50/10") {
                                 selectedWorkDuration = 50
                                 selectedBreakDuration = 10
@@ -228,18 +239,18 @@ struct TaskListView: View {
                             .background(Color.blue.opacity(0.8))
                             .foregroundColor(.white)
                             .cornerRadius(10)
-
+                            
                             VStack(spacing: 10) {
                                 TextField("Work minutes", text: $customWorkDuration)
                                     .keyboardType(.numberPad)
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 150)
-
+                                
                                 TextField("Break minutes", text: $customBreakDuration)
                                     .keyboardType(.numberPad)
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 150)
-
+                                
                                 Button("Save Custom") {
                                     if let work = Int(customWorkDuration), let breakTime = Int(customBreakDuration) {
                                         selectedWorkDuration = work
@@ -252,19 +263,19 @@ struct TaskListView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                             }
-
+                            
                             Button("Close") {
                                 showSettingsOverlay = false
                             }
                             .padding(.top, 20)
                             .foregroundColor(.white)
                         }
-                        .padding()
+                            .padding()
                     )
             }
         }
     }
-
+    
     private func addTask() {
         let newTask = Task(context: viewContext)
         newTask.title = newTaskTitle
@@ -272,17 +283,17 @@ struct TaskListView: View {
         saveContext()
         newTaskTitle = ""
     }
-
+    
     private func toggleTask(_ task: Task) {
         task.isCompleted.toggle()
         saveContext()
     }
-
+    
     private func deleteTasks(at offsets: IndexSet) {
         offsets.map { tasks[$0] }.forEach(viewContext.delete)
         saveContext()
     }
-
+    
     private func saveContext() {
         do {
             try viewContext.save()
@@ -290,7 +301,7 @@ struct TaskListView: View {
             print("Error saving context: \(error.localizedDescription)")
         }
     }
-
+    
     private func startWork(on task: Task) {
         selectedTask = task
         timeRemaining = selectedWorkDuration * 60
@@ -298,6 +309,7 @@ struct TaskListView: View {
         showTimerOverlay = true
         fetchQuote()
         startTimer()
+        startLiveActivity(task: task)
         startGyroscope()
     }
     
@@ -309,17 +321,17 @@ struct TaskListView: View {
         startTimer()
         stopGyroscope()
     }
-
+    
     private func startTimer() {
         timerRunning = true
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 {
                 timeRemaining -= 1
+                updateLiveActivityState()
             } else {
                 timer?.invalidate()
                 timer = nil
                 timerRunning = false
-
                 if isBreakTime {
                     breakEnded()
                 } else {
@@ -333,26 +345,27 @@ struct TaskListView: View {
         playNotification()
         startWork(on: selectedTask!)
     }
-
-
+    
+    
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
         timerRunning = false
         stopGyroscope()
+        endLiveActivity()
     }
-
+    
     private func resetTimer() {
         stopTimer()
         timeRemaining = selectedWorkDuration * 60
     }
-
+    
     private func formatTime() -> String {
         let minutes = timeRemaining / 60
         let seconds = timeRemaining % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
-
+    
     private func markTaskCompleted() {
         if let task = selectedTask {
             task.isCompleted = true
@@ -360,8 +373,8 @@ struct TaskListView: View {
         }
         showTimerOverlay = false
     }
-
-
+    
+    
     private func playNotification() {
         AudioServicesPlaySystemSound(SystemSoundID(1005))
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
@@ -370,14 +383,14 @@ struct TaskListView: View {
     private func fetchQuote() {
         let urlString = "http://api.quotable.io/random"
         guard let url = URL(string: urlString) else { return }
-
+        
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching quote: \(error.localizedDescription)")
                 return
             }
             guard let data = data else { return }
-
+            
             do {
                 let quoteResponse = try JSONDecoder().decode(QuoteResponse.self, from: data)
                 DispatchQueue.main.async {
@@ -388,10 +401,10 @@ struct TaskListView: View {
                 print("Error decoding quote: \(error.localizedDescription)")
             }
         }
-
+        
         task.resume()
     }
-
+    
     struct QuoteResponse: Decodable {
         let content: String
         let author: String
@@ -402,7 +415,7 @@ struct TaskListView: View {
             motionManager.gyroUpdateInterval = 0.1
             motionManager.startGyroUpdates(to: .main) { (data, error) in
                 guard let data = data else { return }
-
+                
                 if abs(data.rotationRate.x) > 0.5 || abs(data.rotationRate.y) > 0.5 || abs(data.rotationRate.z) > 0.5 {
                     if !self.isDeviceMoving {
                         self.isDeviceMoving = true
@@ -414,29 +427,29 @@ struct TaskListView: View {
             }
         }
     }
-
-
-
+    
+    
+    
     private func showFocusReminder() {
         let content = UNMutableNotificationContent()
         content.title = "Attention!"
         content.body = "Focus on your task!"
         content.sound = .default
-
+        
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: "focusReminder", content: content, trigger: trigger)
-
+        
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("Error scheduling notification: \(error.localizedDescription)")
             }
         }
     }
-
+    
     private func stopGyroscope() {
         motionManager.stopGyroUpdates()
     }
-
+    
     private func requestNotificationPermissions() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
@@ -447,4 +460,48 @@ struct TaskListView: View {
         }
     }
     
+    func startLiveActivity(task: Task){
+        let attributes = FocusActivityAttributes(taskName: task.title ?? "Task")
+        let initialState = FocusActivityAttributes.ContentState(timeRemaining: timeRemaining, isBreak: isBreakTime)
+        
+        do{
+            let _ = try Activity<FocusActivityAttributes>.request(
+                attributes: attributes,
+                content: ActivityContent(state: initialState, staleDate: nil),
+                pushType: nil
+            )
+        } catch {
+            print("Failed to start live Activity: \(error)")
+        }
+        
+    }
+    
+    private func updateLiveActivityState() {
+        for activity in Activity<FocusActivityAttributes>.activities {
+            _Concurrency.Task {
+                await activity.update(ActivityContent(state: FocusActivityAttributes.ContentState(
+                    timeRemaining: timeRemaining,
+                    isBreak: isBreakTime
+                ), staleDate: nil))
+                
+            }
+        }
+    }
+    
+    private func endLiveActivity() {
+        for activity in Activity<FocusActivityAttributes>.activities {
+            _Concurrency.Task {
+                await activity.end(
+                    ActivityContent(state: FocusActivityAttributes.ContentState(
+                        timeRemaining: 0,
+                        isBreak: isBreakTime
+                    ), staleDate: nil),
+                    dismissalPolicy: .immediate
+                )
+                
+            }
+        }
+        
+        
+    }
 }

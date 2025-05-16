@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D34B04AA2DD7BC7B0096C888 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34B04A92DD7BC7B0096C888 /* WidgetKit.framework */; };
+		D34B04AC2DD7BC7B0096C888 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34B04AB2DD7BC7B0096C888 /* SwiftUI.framework */; };
+		D34B04BD2DD7BC7D0096C888 /* FocusActivityWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D34B04A72DD7BC7B0096C888 /* FocusActivityWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		D34B04BB2DD7BC7D0096C888 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D384B4A32DD359380093A29E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34B04A62DD7BC7B0096C888;
+			remoteInfo = FocusActivityWidgetExtension;
+		};
 		D384B4BE2DD3593A0093A29E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D384B4A32DD359380093A29E /* Project object */;
@@ -23,13 +36,44 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D34B04BE2DD7BC7D0096C888 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D34B04BD2DD7BC7D0096C888 /* FocusActivityWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D34B04A72DD7BC7B0096C888 /* FocusActivityWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusActivityWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D34B04A92DD7BC7B0096C888 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		D34B04AB2DD7BC7B0096C888 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		D384B4AB2DD359380093A29E /* iDoFocus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDoFocus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D384B4BD2DD3593A0093A29E /* iDoFocusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDoFocusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D384B4C72DD3593A0093A29E /* iDoFocusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iDoFocusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D34B04C22DD7BC7D0096C888 /* Exceptions for "FocusActivityWidget" folder in "FocusActivityWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D34B04A62DD7BC7B0096C888 /* FocusActivityWidgetExtension */;
+		};
+		D34B04C62DD7C38C0096C888 /* Exceptions for "FocusActivityWidget" folder in "iDoFocus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SharedActivityAttributes.swift,
+			);
+			target = D384B4AA2DD359380093A29E /* iDoFocus */;
+		};
 		D384B4E12DD37C6E0093A29E /* Exceptions for "iDoFocus" folder in "iDoFocus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -41,6 +85,15 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		D34B04AD2DD7BC7B0096C888 /* FocusActivityWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D34B04C62DD7C38C0096C888 /* Exceptions for "FocusActivityWidget" folder in "iDoFocus" target */,
+				D34B04C22DD7BC7D0096C888 /* Exceptions for "FocusActivityWidget" folder in "FocusActivityWidgetExtension" target */,
+			);
+			path = FocusActivityWidget;
+			sourceTree = "<group>";
+		};
 		D384B4AD2DD359380093A29E /* iDoFocus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -62,6 +115,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D34B04A42DD7BC7B0096C888 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D34B04AC2DD7BC7B0096C888 /* SwiftUI.framework in Frameworks */,
+				D34B04AA2DD7BC7B0096C888 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D384B4A82DD359380093A29E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,12 +148,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D34B04A82DD7BC7B0096C888 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D34B04A92DD7BC7B0096C888 /* WidgetKit.framework */,
+				D34B04AB2DD7BC7B0096C888 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D384B4A22DD359380093A29E = {
 			isa = PBXGroup;
 			children = (
 				D384B4AD2DD359380093A29E /* iDoFocus */,
 				D384B4C02DD3593A0093A29E /* iDoFocusTests */,
 				D384B4CA2DD3593A0093A29E /* iDoFocusUITests */,
+				D34B04AD2DD7BC7B0096C888 /* FocusActivityWidget */,
+				D34B04A82DD7BC7B0096C888 /* Frameworks */,
 				D384B4AC2DD359380093A29E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,6 +175,7 @@
 				D384B4AB2DD359380093A29E /* iDoFocus.app */,
 				D384B4BD2DD3593A0093A29E /* iDoFocusTests.xctest */,
 				D384B4C72DD3593A0093A29E /* iDoFocusUITests.xctest */,
+				D34B04A72DD7BC7B0096C888 /* FocusActivityWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,6 +183,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D34B04A62DD7BC7B0096C888 /* FocusActivityWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D34B04C12DD7BC7D0096C888 /* Build configuration list for PBXNativeTarget "FocusActivityWidgetExtension" */;
+			buildPhases = (
+				D34B04A32DD7BC7B0096C888 /* Sources */,
+				D34B04A42DD7BC7B0096C888 /* Frameworks */,
+				D34B04A52DD7BC7B0096C888 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D34B04AD2DD7BC7B0096C888 /* FocusActivityWidget */,
+			);
+			name = FocusActivityWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = FocusActivityWidgetExtension;
+			productReference = D34B04A72DD7BC7B0096C888 /* FocusActivityWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		D384B4AA2DD359380093A29E /* iDoFocus */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D384B4D12DD3593A0093A29E /* Build configuration list for PBXNativeTarget "iDoFocus" */;
@@ -116,10 +212,12 @@
 				D384B4A72DD359380093A29E /* Sources */,
 				D384B4A82DD359380093A29E /* Frameworks */,
 				D384B4A92DD359380093A29E /* Resources */,
+				D34B04BE2DD7BC7D0096C888 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D34B04BC2DD7BC7D0096C888 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D384B4AD2DD359380093A29E /* iDoFocus */,
@@ -187,6 +285,9 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					D34B04A62DD7BC7B0096C888 = {
+						CreatedOnToolsVersion = 16.3;
+					};
 					D384B4AA2DD359380093A29E = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -217,11 +318,19 @@
 				D384B4AA2DD359380093A29E /* iDoFocus */,
 				D384B4BC2DD3593A0093A29E /* iDoFocusTests */,
 				D384B4C62DD3593A0093A29E /* iDoFocusUITests */,
+				D34B04A62DD7BC7B0096C888 /* FocusActivityWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D34B04A52DD7BC7B0096C888 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D384B4A92DD359380093A29E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -246,6 +355,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D34B04A32DD7BC7B0096C888 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D384B4A72DD359380093A29E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,6 +386,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D34B04BC2DD7BC7D0096C888 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34B04A62DD7BC7B0096C888 /* FocusActivityWidgetExtension */;
+			targetProxy = D34B04BB2DD7BC7D0096C888 /* PBXContainerItemProxy */;
+		};
 		D384B4BF2DD3593A0093A29E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D384B4AA2DD359380093A29E /* iDoFocus */;
@@ -283,6 +404,58 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		D34B04BF2DD7BC7D0096C888 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusActivityWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusActivityWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wpacocha.iDoFocus.FocusActivityWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D34B04C02DD7BC7D0096C888 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusActivityWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusActivityWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wpacocha.iDoFocus.FocusActivityWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		D384B4CF2DD3593A0093A29E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -405,8 +578,9 @@
 		D384B4D22DD3593A0093A29E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Logo;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -433,8 +607,9 @@
 		D384B4D32DD3593A0093A29E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Logo;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -529,6 +704,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D34B04C12DD7BC7D0096C888 /* Build configuration list for PBXNativeTarget "FocusActivityWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D34B04BF2DD7BC7D0096C888 /* Debug */,
+				D34B04C02DD7BC7D0096C888 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D384B4A62DD359380093A29E /* Build configuration list for PBXProject "iDoFocus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
